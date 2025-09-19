@@ -84,9 +84,17 @@ export class MemStorage implements IStorage {
     return Promise.all(
       images.map(async (image) => {
         const category = this.categories.get(image.categoryId);
+        if (!category) {
+          console.warn(`Category not found for image ${image.id} with categoryId ${image.categoryId}`);
+          // Return a default category if the original is missing
+          return {
+            ...image,
+            category: { id: 'unknown', name: 'Unknown', slug: 'unknown', count: 0 },
+          };
+        }
         return {
           ...image,
-          category: category!,
+          category,
         };
       })
     );

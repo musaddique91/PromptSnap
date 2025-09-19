@@ -26,7 +26,7 @@ const getCategoryColor = (slug: string) => {
 };
 
 export default function ImageCard({ image, onClick, onPromptClick }: ImageCardProps) {
-  const categoryColorClass = getCategoryColor(image.category.slug);
+  const categoryColorClass = getCategoryColor(image.category?.slug || 'unknown');
 
   return (
     <div
@@ -43,7 +43,7 @@ export default function ImageCard({ image, onClick, onPromptClick }: ImageCardPr
       <div className="p-4">
         <div className="flex items-center justify-between mb-3">
           <span className={`text-xs px-2 py-1 rounded-full ${categoryColorClass}`}>
-            {image.category.name}
+            {image.category?.name || 'Unknown'}
           </span>
           <div className="flex items-center space-x-2 text-xs text-muted-foreground">
             <Heart className="h-3 w-3" />
