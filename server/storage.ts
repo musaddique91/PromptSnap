@@ -1,153 +1,101 @@
-import { type Category, type InsertCategory, type Image, type InsertImage, type ImageWithCategory } from "@shared/schema";
+// storage/mongo.ts
+import {
+  Category,
+  InsertCategory,
+  Image,
+  InsertImage,
+  ImageWithCategory,
+} from "@shared/schema";
 import { randomUUID } from "crypto";
+import { getDb } from "./db/db";
+import { IStorage } from "./db/storage.interface";
 
-export interface IStorage {
-  // Categories
-  getCategories(): Promise<Category[]>;
-  getCategoryBySlug(slug: string): Promise<Category | undefined>;
-  createCategory(category: InsertCategory): Promise<Category>;
-  updateCategoryCount(categoryId: string, increment: number): Promise<void>;
-
-  // Images
-  getImages(categorySlug?: string): Promise<ImageWithCategory[]>;
-  getImageById(id: string): Promise<ImageWithCategory | undefined>;
-  createImage(image: InsertImage): Promise<Image>;
-  deleteImage(id: string): Promise<boolean>;
-  incrementLikes(id: string): Promise<void>;
-}
-
-export class MemStorage implements IStorage {
-  private categories: Map<string, Category>;
-  private images: Map<string, Image>;
-
-  constructor() {
-    this.categories = new Map();
-    this.images = new Map();
-    this.initializeDefaultCategories();
-  }
-
-  private initializeDefaultCategories() {
-    const defaultCategories = [
-      { name: "All Images", slug: "all" },
-      { name: "Digital Art", slug: "digital-art" },
-      { name: "Photography", slug: "photography" },
-      { name: "Portraits", slug: "portraits" },
-      { name: "Landscapes", slug: "landscapes" },
-      { name: "Abstract", slug: "abstract" },
-    ];
-
-    defaultCategories.forEach(cat => {
-      const id = randomUUID();
-      const category: Category = { 
-        id, 
-        name: cat.name, 
-        slug: cat.slug, 
-        count: 0 
-      };
-      this.categories.set(id, category);
-    });
-  }
-
+export class MongoStorage implements IStorage {
   async getCategories(): Promise<Category[]> {
-    return Array.from(this.categories.values());
+    const db = await getDb();
+    return db.collection<Category>("categories").find().toArray();
   }
 
   async getCategoryBySlug(slug: string): Promise<Category | undefined> {
-    return Array.from(this.categories.values()).find(cat => cat.slug === slug);
+    const db = await getDb();
+    const doc = await db.collection<Category>("categories").findOne({ slug });
+    return (doc as Category) ?? undefined;
   }
 
-  async createCategory(insertCategory: InsertCategory): Promise<Category> {
-    const id = randomUUID();
-    const category: Category = { ...insertCategory, id, count: 0 };
-    this.categories.set(id, category);
+
+  async createCategory(insert: InsertCategory): Promise<Category> {
+    const db = await getDb();
+    const category: Category = { id: randomUUID(), count: 0, ...insert };
+    await db.collection<Category>("categories").insertOne(category);
     return category;
   }
 
   async updateCategoryCount(categoryId: string, increment: number): Promise<void> {
-    const category = this.categories.get(categoryId);
-    if (category) {
-      category.count += increment;
-      this.categories.set(categoryId, category);
-    }
+    const db = await getDb();
+    await db
+      .collection<Category>("categories")
+      .updateOne({ id: categoryId }, { $inc: { count: increment } });
   }
 
   async getImages(categorySlug?: string): Promise<ImageWithCategory[]> {
-    let images = Array.from(this.images.values());
-    
+    const db = await getDb();
+    let filter: Record<string, unknown> = {};
     if (categorySlug && categorySlug !== "all") {
-      const category = await this.getCategoryBySlug(categorySlug);
-      if (category) {
-        images = images.filter(img => img.categoryId === category.id);
-      }
+      const cat = await this.getCategoryBySlug(categorySlug);
+      if (!cat) return [];
+      filter = { categoryId: cat.id };
     }
-
-    return Promise.all(
-      images.map(async (image) => {
-        const category = this.categories.get(image.categoryId);
-        if (!category) {
-          console.warn(`Category not found for image ${image.id} with categoryId ${image.categoryId}`);
-          // Return a default category if the original is missing
-          return {
-            ...image,
-            category: { id: 'unknown', name: 'Unknown', slug: 'unknown', count: 0 },
-          };
-        }
-        return {
-          ...image,
-          category,
-        };
-      })
-    );
+    const images = await db.collection<Image>("images").find(filter).toArray();
+    const cats = await this.getCategories();
+    const catMap = new Map(cats.map((c) => [c.id, c]));
+    return images.map((img) => ({
+      ...img,
+      category: catMap.get(img.categoryId) ?? {
+        id: "unknown",
+        name: "Unknown",
+        slug: "unknown",
+        count: 0,
+      },
+    }));
   }
 
   async getImageById(id: string): Promise<ImageWithCategory | undefined> {
-    const image = this.images.get(id);
+    const db = await getDb();
+    const image = await db.collection<Image>("images").findOne({ id });
     if (!image) return undefined;
-
-    const category = this.categories.get(image.categoryId);
+    const category = await db
+      .collection<Category>("categories")
+      .findOne({ id: image.categoryId });
     if (!category) return undefined;
-
-    return {
-      ...image,
-      category,
-    };
+    return { ...image, category };
   }
 
-  async createImage(insertImage: InsertImage): Promise<Image> {
-    const id = randomUUID();
+  async createImage(insert: InsertImage): Promise<Image> {
+    const db = await getDb();
     const image: Image = {
-      ...insertImage,
-      id,
+      id: randomUUID(),
       likes: 0,
       uploadDate: new Date(),
+      ...insert,
     };
-    this.images.set(id, image);
-    
-    // Update category count
-    await this.updateCategoryCount(insertImage.categoryId, 1);
-    
+    await db.collection<Image>("images").insertOne(image);
+    await this.updateCategoryCount(insert.categoryId, 1);
     return image;
   }
 
   async deleteImage(id: string): Promise<boolean> {
-    const image = this.images.get(id);
+    const db = await getDb();
+    const image = await db.collection<Image>("images").findOne({ id });
     if (!image) return false;
-
-    this.images.delete(id);
-    
-    // Update category count
+    await db.collection<Image>("images").deleteOne({ id });
     await this.updateCategoryCount(image.categoryId, -1);
-    
     return true;
   }
 
   async incrementLikes(id: string): Promise<void> {
-    const image = this.images.get(id);
-    if (image) {
-      image.likes += 1;
-      this.images.set(id, image);
-    }
+    const db = await getDb();
+    await db.collection<Image>("images").updateOne({ id }, { $inc: { likes: 1 } });
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new MongoStorage();

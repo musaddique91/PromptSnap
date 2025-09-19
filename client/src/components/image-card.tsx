@@ -46,8 +46,8 @@ export default function ImageCard({ image, onClick, onPromptClick }: ImageCardPr
             {image.category?.name || 'Unknown'}
           </span>
           <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-            <Heart className="h-3 w-3" />
-            <span data-testid={`text-likes-${image.id}`}>{image.likes}</span>
+            <Heart className="h-4 w-4" />
+            <span className="h-4 w-4" data-testid={`text-likes-${image.id}`}>{image.likes}</span>
           </div>
         </div>
         <Button
