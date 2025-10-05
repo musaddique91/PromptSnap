@@ -73,8 +73,8 @@ export default function Home() {
               <h2 className="text-2xl font-bold" data-testid="page-title">
                 {currentCategory.name}
               </h2>
-              <p className="text-muted-foreground text-white">
-                Explore AI-generated {currentCategory.name.toLowerCase()} and their prompts
+              <p className="hidden md:block text-white text-muted-foreground">
+                Explore AI-generated {currentCategory.name} and their prompts
               </p>
             </div>
             <div className="flex items-center space-x-4">
