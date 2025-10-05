@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -30,9 +30,12 @@ interface UploadModalProps {
 
 export default function UploadModal({ open, onOpenChange, categories }: UploadModalProps) {
   const [file, setFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState("");
   const [prompt, setPrompt] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [dragActive, setDragActive] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -63,6 +66,7 @@ export default function UploadModal({ open, onOpenChange, categories }: UploadMo
     setFile(null);
     setPrompt("");
     setCategoryId("");
+    setImageUrl("");
     setDragActive(false);
     onOpenChange(false);
   };
@@ -70,11 +74,7 @@ export default function UploadModal({ open, onOpenChange, categories }: UploadMo
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
+    setDragActive(e.type === "dragenter" || e.type === "dragover");
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -91,6 +91,7 @@ export default function UploadModal({ open, onOpenChange, categories }: UploadMo
   const handleFileSelect = (selectedFile: File) => {
     if (selectedFile && selectedFile.type.startsWith("image/")) {
       setFile(selectedFile);
+      setImageUrl(URL.createObjectURL(selectedFile));
     } else {
       toast({
         title: "Error",
@@ -100,9 +101,42 @@ export default function UploadModal({ open, onOpenChange, categories }: UploadMo
     }
   };
 
+  const handleUrlInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const url = e.target.value.trim();
+    setImageUrl(url);
+
+    if (!url) {
+      setFile(null);
+      return;
+    }
+
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+
+      if (!blob.type.startsWith("image/")) {
+        toast({
+          title: "Error",
+          description: "The URL does not point to a valid image.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const fileFromUrl = new File([blob], "downloaded_image.jpg", { type: blob.type });
+      setFile(fileFromUrl);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Could not fetch image from URL.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!file || !prompt || !categoryId) {
       toast({
         title: "Error",
@@ -120,8 +154,7 @@ export default function UploadModal({ open, onOpenChange, categories }: UploadMo
     uploadMutation.mutate(formData);
   };
 
-  // Filter out "All Images" category for upload
-  const uploadCategories = categories.filter(cat => cat.slug !== "all");
+  const uploadCategories = categories.filter((cat) => cat.slug !== "all");
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -141,18 +174,32 @@ export default function UploadModal({ open, onOpenChange, categories }: UploadMo
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* URL Input */}
+          <div>
+            <Label className="block text-sm font-medium mb-2">Image URL (optional)</Label>
+            <Input
+              type="text"
+              placeholder="Paste image URL..."
+              value={imageUrl.startsWith("blob:") ? "" : imageUrl}
+              onChange={handleUrlInput}
+              className="w-full"
+            />
+          </div>
+
           {/* File Upload */}
           <div>
-            <Label className="block text-sm font-medium mb-2">Image File</Label>
+            <Label className="block text-sm font-medium mb-2">Upload Image</Label>
             <div
               className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer ${
-                dragActive ? "border-primary/50 bg-primary/5" : "border-border hover:border-primary/50"
+                dragActive
+                  ? "border-primary/50 bg-primary/5"
+                  : "border-border hover:border-primary/50"
               }`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
               onDragOver={handleDrag}
               onDrop={handleDrop}
-              onClick={() => document.getElementById("file-input")?.click()}
+              onClick={() => fileInputRef.current?.click()}
               data-testid="dropzone-upload"
             >
               <CloudUpload className="mx-auto h-12 w-12 text-muted-foreground mb-2" />
@@ -162,19 +209,31 @@ export default function UploadModal({ open, onOpenChange, categories }: UploadMo
                   <p className="text-xs text-muted-foreground">
                     {(file.size / 1024 / 1024).toFixed(2)} MB
                   </p>
+                  <img
+                    src={imageUrl}
+                    alt="Preview"
+                    className="mx-auto mt-4 max-h-48 rounded-lg border"
+                  />
                 </div>
               ) : (
                 <div>
-                  <p className="text-sm text-muted-foreground">Click to upload or drag and drop</p>
-                  <p className="text-xs text-muted-foreground mt-1">PNG, JPG, GIF up to 10MB</p>
+                  <p className="text-sm text-muted-foreground">
+                    Click to upload or drag and drop
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    PNG, JPG, GIF up to 10MB
+                  </p>
                 </div>
               )}
               <input
                 id="file-input"
                 type="file"
                 accept="image/*"
-                onChange={(e) => e.target.files?.[0] && handleFileSelect(e.target.files[0])}
+                onChange={(e) =>
+                  e.target.files?.[0] && handleFileSelect(e.target.files[0])
+                }
                 className="hidden"
+                ref={fileInputRef}
                 data-testid="input-file"
               />
             </div>

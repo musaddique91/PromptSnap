@@ -33,7 +33,7 @@ export default function Admin() {
       <div className="flex h-screen">
         {/* Admin Sidebar */}
         <aside className="w-64 bg-card border-r border-border">
-          <div className="p-6 border-b border-border">
+          <div className="p-2 border-b border-border">
             <h2 className="text-lg font-bold gradient-text">Admin Panel</h2>
             <p className="text-sm text-muted-foreground">Content Management</p>
           </div>

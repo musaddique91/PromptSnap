@@ -1,0 +1,234 @@
+[{
+  "_id": {
+    "$oid": "68cd8614b608a5c787ce5f47"
+  },
+  "id": "1",
+  "name": "All Images",
+  "slug": "all",
+  "count": 0
+},
+{
+  "_id": {
+    "$oid": "68cd8614b608a5c787ce5f48"
+  },
+  "id": "2",
+  "name": "Digital Art",
+  "slug": "digital-art",
+  "count": 4
+},
+{
+  "_id": {
+    "$oid": "68cd8614b608a5c787ce5f49"
+  },
+  "id": "3",
+  "name": "Photography",
+  "slug": "photography",
+  "count": 5
+},
+{
+  "_id": {
+    "$oid": "68cd8614b608a5c787ce5f4a"
+  },
+  "id": "4",
+  "name": "Portraits",
+  "slug": "portraits",
+  "count": 4
+},
+{
+  "_id": {
+    "$oid": "68cd8614b608a5c787ce5f4b"
+  },
+  "id": "5",
+  "name": "Landscapes",
+  "slug": "landscapes",
+  "count": 0
+},
+{
+  "_id": {
+    "$oid": "68cd8614b608a5c787ce5f4c"
+  },
+  "id": "6",
+  "name": "Abstract",
+  "slug": "abstract",
+  "count": 2
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4eccc9"
+  },
+  "id": "7",
+  "name": "Animals & Wildlife",
+  "slug": "animals-wildlife",
+  "count": 0
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4eccca"
+  },
+  "id": "8",
+  "name": "Nature & Plants",
+  "slug": "nature-plants",
+  "count": 0
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4ecccb"
+  },
+  "id": "9",
+  "name": "Architecture",
+  "slug": "architecture",
+  "count": 0
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4ecccc"
+  },
+  "id": "10",
+  "name": "Food & Drinks",
+  "slug": "food-drinks",
+  "count": 2
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4ecccd"
+  },
+  "id": "11",
+  "name": "Fashion & Style",
+  "slug": "fashion-style",
+  "count": 2
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4eccce"
+  },
+  "id": "12",
+  "name": "Travel & Destinations",
+  "slug": "travel-destinations",
+  "count": 0
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4ecccf"
+  },
+  "id": "13",
+  "name": "Fantasy & Sci-Fi",
+  "slug": "fantasy-sci-fi",
+  "count": 4
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4eccd0"
+  },
+  "id": "14",
+  "name": "Minimalism",
+  "slug": "minimalism",
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4eccd1"
+  },
+  "id": "15",
+  "name": "Street Photography",
+  "slug": "street-photography",
+  "count": 0
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4eccd2"
+  },
+  "id": "16",
+  "name": "Black & White",
+  "slug": "black-white",
+  "count": 0
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4eccd3"
+  },
+  "id": "17",
+  "name": "Macro",
+  "slug": "macro",
+  "count": 0
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4eccd4"
+  },
+  "id": "18",
+  "name": "Sports & Action",
+  "slug": "sports-action",
+  "count": 0
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4eccd5"
+  },
+  "id": "19",
+  "name": "Urban & Cityscapes",
+  "slug": "urban-cityscapes",
+  "count": 0
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4eccd6"
+  },
+  "id": "20",
+  "name": "Technology & Futuristic",
+  "slug": "technology-futuristic",
+  "count": 0
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4eccd7"
+  },
+  "id": "21",
+  "name": "Vintage & Retro",
+  "slug": "vintage-retro",
+  "count": 2
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4eccd8"
+  },
+  "id": "22",
+  "name": "Illustrations & Cartoons",
+  "slug": "illustrations-cartoons",
+  "count": 4
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4eccd9"
+  },
+  "id": "23",
+  "name": "Water & Ocean",
+  "slug": "water-ocean",
+  "count": 0
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4eccda"
+  },
+  "id": "24",
+  "name": "Mountains & Adventure",
+  "slug": "mountains-adventure",
+  "count": 0
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4eccdb"
+  },
+  "id": "25",
+  "name": "People & Lifestyle",
+  "slug": "people-lifestyle",
+  "count": 0
+},
+{
+  "_id": {
+    "$oid": "68e13c3a5bc91eba9f4eccdc"
+  },
+  "id": "26",
+  "name": "Events & Celebrations",
+  "slug": "events-celebrations",
+  "count": 0
+}]

@@ -67,13 +67,13 @@ export default function Home() {
       
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="bg-card border-b border-border px-8 py-6">
+        <header className="bg-card border-b border-border px-4 py-2 bg-primary text-white">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold" data-testid="page-title">
                 {currentCategory.name}
               </h2>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground text-white">
                 Explore AI-generated {currentCategory.name.toLowerCase()} and their prompts
               </p>
             </div>
@@ -90,13 +90,13 @@ export default function Home() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               </div>
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-40" data-testid="select-sort">
+                <SelectTrigger className="w-40 text-black" data-testid="select-sort">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="latest">Sort by Latest</SelectItem>
-                  <SelectItem value="popular">Sort by Popular</SelectItem>
-                  <SelectItem value="name">Sort by Name</SelectItem>
+                  <SelectItem value="latest" className="text-black">Sort by Latest</SelectItem>
+                  <SelectItem value="popular" className="text-black">Sort by Popular</SelectItem>
+                  <SelectItem value="name" className="text-black">Sort by Name</SelectItem>
                 </SelectContent>
               </Select>
             </div>

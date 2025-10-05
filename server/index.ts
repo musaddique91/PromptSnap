@@ -62,8 +62,8 @@ app.use((req, res, next) => {
   // It is the only port that is not firewalled.
   const port = Number(process.env.PORT) || 5000;
 
-// Bind to 0.0.0.0 so it's reachable from Docker / LAN
-server.listen(port, "0.0.0.0", () => {
-  console.log(`✅ Server running on http://0.0.0.0:${port}`);
-});
+  const host = process.env.HOST || "localhost";
+  server.listen(port, host, () => {
+    console.log(`✅ Server running on http://${host}:${port}`);
+  });
 })();

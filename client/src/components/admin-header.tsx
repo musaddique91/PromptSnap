@@ -19,7 +19,7 @@ export default function AdminHeader({
   categories,
 }: AdminHeaderProps) {
   return (
-    <header className="bg-card border-b border-border px-8 py-6">
+    <header className="bg-card border-b border-border px-4 py-2">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Image Management</h2>

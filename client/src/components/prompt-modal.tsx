@@ -59,18 +59,18 @@ export default function PromptModal({ open, onOpenChange, image }: PromptModalPr
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-w-2xl" data-testid="modal-prompt">
+      <DialogContent className="w-full max-w-4xl" data-testid="modal-prompt">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             AI Generation Details
-            <Button
+            {/* <Button
               variant="ghost"
               size="sm"
               onClick={() => onOpenChange(false)}
               data-testid="button-close-prompt"
             >
               <X className="h-4 w-4" />
-            </Button>
+            </Button> */}
           </DialogTitle>
         </DialogHeader>
 
@@ -98,7 +98,7 @@ export default function PromptModal({ open, onOpenChange, image }: PromptModalPr
             <div>
               <h4 className="font-semibold mb-2">AI Prompt</h4>
               <div
-                className="bg-muted rounded-lg p-4 text-sm max-h-32 overflow-y-auto"
+                className="bg-muted rounded-lg p-4 text-sm max-h-64 overflow-y-auto"
                 data-testid="text-prompt"
               >
                 {image.prompt}

@@ -49,30 +49,30 @@ export default function Sidebar({ categories, currentSlug, onUploadClick }: Side
   return (
     <aside className="w-80 bg-card border-r border-border flex flex-col">
       {/* Logo & Header */}
-      <div className="p-6 border-b border-border">
+      <div className="p-1 border-b border-border">
         <div className="flex items-center space-x-3 mb-6">
           <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
             <Sparkles className="text-primary-foreground h-5 w-5" />
           </div>
           <div>
-            <h1 className="text-xl font-bold gradient-text">PhotoPromptAI</h1>
-            <p className="text-sm text-muted-foreground">AI Image Gallery</p>
+            <h1 className="text-xl font-bold gradient-text">PromptSnap</h1>
+            <p className="text-sm text-muted-foreground">The Art of AI Prompts</p>
           </div>
         </div>
         
         {/* Upload Button */}
-        <Button
+        {/* <Button
           onClick={onUploadClick}
           className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-3 px-4"
           data-testid="button-upload"
         >
           <Plus className="mr-2 h-4 w-4" />
           Upload Image
-        </Button>
+        </Button> */}
       </div>
 
       {/* Categories */}
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-6 overflow-y-auto">
         <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">
           Categories
         </h3>
@@ -80,7 +80,7 @@ export default function Sidebar({ categories, currentSlug, onUploadClick }: Side
           {categories.map((category) => {
             const Icon = getCategoryIcon(category.slug);
             const isActive = currentSlug === category.slug;
-            const colorClass = isActive ? "text-primary" : getCategoryColor(category.slug);
+            const colorClass = isActive ? "text-white bg-primary" : getCategoryColor(category.slug);
             const bgClass = isActive ? "bg-primary/10" : "hover:bg-muted/50";
             
             return (
@@ -89,7 +89,7 @@ export default function Sidebar({ categories, currentSlug, onUploadClick }: Side
                 href={category.slug === "all" ? "/" : `/category/${category.slug}`}
               >
                 <div
-                  className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors group cursor-pointer ${bgClass} ${isActive ? colorClass : "text-muted-foreground hover:text-foreground"}`}
+                  className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors group cursor-pointer ${bgClass} ${isActive ? colorClass : "text-muted-foreground hover:text-foreground hover:bg-purple-200"}`}
                   data-testid={`link-category-${category.slug}`}
                 >
                   <div className={`w-8 h-8 ${isActive ? "bg-primary/20" : "bg-muted"} rounded-md flex items-center justify-center`}>
