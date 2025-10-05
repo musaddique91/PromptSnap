@@ -1,23 +1,25 @@
 // db.ts
 import { MongoClient, Db } from "mongodb";
-
 import dotenv from "dotenv";
 dotenv.config();
 
 const user = process.env.MONGO_USER;
 const pass = process.env.MONGO_PASS;
 const host = process.env.MONGO_HOST;
-const port = process.env.MONGO_PORT;
 const dbName = process.env.MONGO_DB;
-const uri = `mongodb://${user}:${pass}@${host}:${port}/?authSource=admin`;
+
+// ✅ For MongoDB Atlas (no port, no authSource)
+const uri = `mongodb+srv://${user}:${pass}@${host}/${dbName}?retryWrites=true&w=majority`;
+console.log("mongo url", uri);
 const client = new MongoClient(uri);
 let db: Db;
 
-export async function getDb() {
+export async function getDb(): Promise<Db> {
   if (!db) {
     await client.connect();
     db = client.db(dbName);
     await ensureIndexes();
+    console.log("✅ Connected to MongoDB Atlas");
   }
   return db;
 }
